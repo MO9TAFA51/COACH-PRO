@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة المتدرب | COACH PRO</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .client-container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .welcome-section {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(52, 152, 219, 0.3);
+        }
+        
+        .welcome-section h1 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 32px;
+        }
+        
+        .client-card {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .client-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+            transition: all 0.3s;
+        }
+        
+        .info-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .info-card i {
+            font-size: 30px;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .plan-section {
+            margin-bottom: 30px;
+        }
+        
+        .plan-box {
+            background: #f8fafc;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border-right: 5px solid #3498db;
+        }
+        
+        .plan-box h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+        }
+        
+        .plan-content {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            line-height: 1.8;
+            white-space: pre-wrap;
+            font-size: 16px;
+            border: 1px solid #e9ecef;
+            min-height: 200px;
+        }
+        
+        .no-plan {
+            text-align: center;
+            padding: 40px 20px;
+            color: #95a5a6;
+        }
+        
+        .no-plan i {
+            font-size: 50px;
+            margin-bottom: 15px;
+            display: block;
+        }
+        
+        .logout-section {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #eee;
+        }
+        
+        .update-time {
+            text-align: left;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 10px;
+            padding: 8px 12px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        
+        .debug-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: #9b59b6;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="client-container">
+        <div class="welcome-section">
+            <h1 id="clientWelcome">مرحباً!</h1>
+            <p id="clientEmail" style="font-size: 18px;">جاري تحميل بياناتك...</p>
+        </div>
+        
+        <div class="client-card">
+            <div class="client-info">
+                <div class="info-card">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>الهدف الرياضي</h3>
+                    <p id="clientGoal" style="font-size: 18px; color: #2c3e50;">جاري التحميل...</p>
+                </div>
+                
+                <div class="info-card">
+                    <i class="fas fa-calendar-check"></i>
+                    <h3>تاريخ التسجيل</h3>
+                    <p id="clientJoinDate">جاري التحميل...</p>
+                </div>
+                
+                <div class="info-card">
+                    <i class="fas fa-user-shield"></i>
+                    <h3>الكوتش الخاص بك</h3>
+                    <p style="color: #3498db; font-weight: bold;">admin@gym.com</p>
+                </div>
+                
+                <div class="info-card">
+                    <i class="fas fa-clock"></i>
+                    <h3>آخر تحديث</h3>
+                    <p id="lastUpdated">غير محدد</p>
+                </div>
+            </div>
+            
+            <div class="plan-section">
+                <div class="plan-box">
+                    <h3><i class="fas fa-utensils"></i> النظام الغذائي</h3>
+                    <div id="dietContent" class="plan-content no-plan">
+                        <i class="fas fa-utensils"></i>
+                        <p>لم يقم الكوتش بتعيين نظام غذائي لك بعد</p>
+                    </div>
+                    <div id="dietUpdateTime" class="update-time"></div>
+                </div>
+                
+                <div class="plan-box">
+                    <h3><i class="fas fa-dumbbell"></i> جدول التمارين</h3>
+                    <div id="workoutContent" class="plan-content no-plan">
+                        <i class="fas fa-dumbbell"></i>
+                        <p>لم يقم الكوتش بتعيين تمارين لك بعد</p>
+                    </div>
+                    <div id="workoutUpdateTime" class="update-time"></div>
+                </div>
+            </div>
+            
+            <div class="logout-section">
+                <button onclick="logout()" class="btn-action" style="max-width: 250px; font-size: 16px;">
+                    <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+                </button>
+                <p style="margin-top: 15px; color: #666; font-size: 14px;">
+                    <i class="fas fa-info-circle"></i> لتعديل النظام، تواصل مع الكوتش: admin@gym.com
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <button class="debug-btn" onclick="showDebugInfo()">
+        <i class="fas fa-bug"></i> فحص
+    </button>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getFirestore, 
+            collection,
+            query,
+            where,
+            getDocs,
+            onSnapshot,
+            doc,
+            getDoc
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged, 
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyBeUimi5NKwV2LOgi47-LhNFKYju2WVKUU",
+            authDomain: "gym-system-41.firebaseapp.com",
+            projectId: "gym-system-41",
+            storageBucket: "gym-system-41.firebasestorage.app",
+            messagingSenderId: "560220070298",
+            appId: "1:560220070298:web:11cd039ba57b66b20b9a23"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        
+        let unsubscribeClientData = null;
+        let currentClientId = null;
+        
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "login.html";
+                return;
+            }
+            
+            document.getElementById('clientWelcome').textContent = `مرحباً ${user.email.split('@')[0]}`;
+            document.getElementById('clientEmail').textContent = user.email;
+            
+            try {
+                console.log("🔍 بدء البحث عن بيانات المتدرب:", user.email);
+                
+                // الطريقة 1: البحث بالإيميل في collection plans
+                const q1 = query(
+                    collection(db, "plans"),
+                    where("email", "==", user.email)
+                );
+                
+                const querySnapshot1 = await getDocs(q1);
+                
+                if (!querySnapshot1.empty) {
+                    // ✅ وجد بالإيميل
+                    const docSnap = querySnapshot1.docs[0];
+                    currentClientId = docSnap.id;
+                    console.log("✅ وجد بالإيميل - Document ID:", currentClientId);
+                    await displayAndSubscribeToClientData(docSnap.id);
+                    return;
+                }
+                
+                console.log("⚠️ لم يتم العثور بالإيميل، جرب البحث بالاسم...");
+                
+                // الطريقة 2: البحث بالاسم (اسم المستخدم من الإيميل)
+                const username = user.email.split('@')[0];
+                console.log("🔍 البحث باسم المستخدم:", username);
+                
+                // جرب أولاً كـ document ID
+                try {
+                    const docRef = doc(db, "plans", username);
+                    const docSnap = await getDoc(docRef);
+                    
+                    if (docSnap.exists()) {
+                        const data = docSnap.data();
+                        currentClientId = username;
+                        console.log("✅ وجد باسم المستخدم كـ Document ID:", currentClientId);
+                        await displayAndSubscribeToClientData(currentClientId);
+                        return;
+                    }
+                } catch (e) {
+                    console.log("❌ خطأ في البحث بالاسم:", e);
+                }
+                
+                // الطريقة 3: البحث في جميع المستندات
+                console.log("🔍 البحث في جميع المستندات...");
+                const allDocsQuery = query(collection(db, "plans"));
+                const allDocsSnapshot = await getDocs(allDocsQuery);
+                
+                let foundClient = null;
+                
+                for (const docSnap of allDocsSnapshot.docs) {
+                    const data = docSnap.data();
+                    
+                    if (data.email === user.email) {
+                        foundClient = { id: docSnap.id, data: data };
+                        break;
+                    }
+                    
+                    if (data.name && data.name.toLowerCase().includes(username.toLowerCase())) {
+                        foundClient = { id: docSnap.id, data: data };
+                        break;
+                    }
+                    
+                    if (data.email && data.email.toLowerCase().includes(username.toLowerCase())) {
+                        foundClient = { id: docSnap.id, data: data };
+                        break;
+                    }
+                }
+                
+                if (foundClient) {
+                    currentClientId = foundClient.id;
+                    console.log("✅ وجد بالبحث الشامل - Document ID:", currentClientId);
+                    await displayAndSubscribeToClientData(currentClientId);
+                    return;
+                }
+                
+                // إذا لم يتم العثور على أي بيانات
+                console.log("❌ لم يتم العثور على بيانات المتدرب بأي طريقة");
+                showNoDataMessage(user.email);
+                
+            } catch (error) {
+                console.error("❌ خطأ في البحث عن البيانات:", error);
+                showNotification("❌ حدث خطأ في تحميل بياناتك", "error");
+                showNoDataMessage(user.email);
+            }
+        });
+        
+        async function displayAndSubscribeToClientData(clientId) {
+            try {
+                const docSnap = await getDoc(doc(db, "plans", clientId));
+                
+                if (!docSnap.exists()) {
+                    throw new Error("المستند غير موجود");
+                }
+                
+                const data = docSnap.data();
+                displayClientData(data);
+                
+                if (unsubscribeClientData) {
+                    unsubscribeClientData();
+                }
+                
+                unsubscribeClientData = onSnapshot(doc(db, "plans", clientId), (doc) => {
+                    if (doc.exists()) {
+                        console.log("🔄 تحديث تلقائي للبيانات");
+                        displayClientData(doc.data());
+                    }
+                });
+                
+            } catch (error) {
+                console.error("❌ خطأ في عرض البيانات:", error);
+                showNotification("❌ حدث خطأ في عرض بياناتك", "error");
+            }
+        }
+        
+        function displayClientData(data) {
+            console.log("📊 عرض بيانات المتدرب:", data);
+            
+            document.getElementById('clientGoal').textContent = data.goal || 'هدف عام';
+            document.getElementById('clientJoinDate').textContent = data.createdAt || 'غير محدد';
+            document.getElementById('lastUpdated').textContent = data.lastUpdated || 'غير محدد';
+            
+            const dietContent = document.getElementById('dietContent');
+            const workoutContent = document.getElementById('workoutContent');
+            
+            if (data.diet && data.diet.trim() !== '' && data.diet !== 'لم يتم تعيين نظام غذائي بعد') {
+                dietContent.textContent = data.diet;
+                dietContent.className = 'plan-content';
+                dietContent.style.whiteSpace = 'pre-wrap';
+                dietContent.style.textAlign = 'right';
+                document.getElementById('dietUpdateTime').innerHTML = 
+                    `<i class="fas fa-clock"></i> آخر تحديث: ${data.lastUpdated || 'غير محدد'}`;
+            } else {
+                dietContent.innerHTML = `
+                    <div style="text-align:center; padding:40px; color:#95a5a6;">
+                        <i class="fas fa-utensils" style="font-size:50px; margin-bottom:15px;"></i>
+                        <h3>لا يوجد نظام غذائي بعد</h3>
+                        <p>سيتواصل معك الكوتش قريباً</p>
+                    </div>
+                `;
+                dietContent.className = 'plan-content no-plan';
+            }
+            
+            if (data.workout && data.workout.trim() !== '' && data.workout !== 'لم يتم تعيين تمارين بعد') {
+                workoutContent.textContent = data.workout;
+                workoutContent.className = 'plan-content';
+                workoutContent.style.whiteSpace = 'pre-wrap';
+                workoutContent.style.textAlign = 'right';
+                document.getElementById('workoutUpdateTime').innerHTML = 
+                    `<i class="fas fa-clock"></i> آخر تحديث: ${data.lastUpdated || 'غير محدد'}`;
+            } else {
+                workoutContent.innerHTML = `
+                    <div style="text-align:center; padding:40px; color:#95a5a6;">
+                        <i class="fas fa-dumbbell" style="font-size:50px; margin-bottom:15px;"></i>
+                        <h3>لا يوجد تمارين بعد</h3>
+                        <p>سيتواصل معك الكوتش قريباً</p>
+                    </div>
+                `;
+                workoutContent.className = 'plan-content no-plan';
+            }
+        }
+        
+        function showNoDataMessage(email) {
+            console.log("⚠️ عرض رسالة عدم وجود بيانات");
+            
+            const dietContent = document.getElementById('dietContent');
+            const workoutContent = document.getElementById('workoutContent');
+            
+            dietContent.innerHTML = `
+                <div style="text-align:center; padding:40px; color:#e74c3c;">
+                    <i class="fas fa-exclamation-triangle" style="font-size:50px; margin-bottom:15px;"></i>
+                    <h3>لم يتم العثور على بياناتك</h3>
+                    <p>إيميلك المسجل: ${email}</p>
+                    <p style="margin-top:15px; color:#666; font-size:14px;">
+                        <strong>الأسباب المحتملة:</strong>
+                        <ul style="text-align:right; margin:10px 20px; color:#555;">
+                            <li>لم يقم الكوتش بإضافتك بعد</li>
+                            <li>تم تخزين بياناتك باسم مختلف</li>
+                            <li>يجب التواصل مع الكوتش لتفعيل حسابك</li>
+                        </ul>
+                    </p>
+                    <p style="margin-top:20px;">
+                        <strong>📧 تواصل مع الكوتش:</strong><br>
+                        admin@gym.com
+                    </p>
+                </div>
+            `;
+            
+            workoutContent.innerHTML = `
+                <div style="text-align:center; padding:40px; color:#e74c3c;">
+                    <i class="fas fa-exclamation-circle" style="font-size:50px; margin-bottom:15px;"></i>
+                    <h3>بياناتك غير متوفرة</h3>
+                    <p>يرجى التواصل مع الكوتش</p>
+                </div>
+            `;
+            
+            document.getElementById('clientGoal').textContent = 'غير محدد';
+            document.getElementById('clientJoinDate').textContent = 'غير محدد';
+            document.getElementById('lastUpdated').textContent = 'غير محدد';
+        }
+        
+        window.logout = function() {
+            if (confirm("هل تريد تسجيل الخروج؟")) {
+                if (unsubscribeClientData) unsubscribeClientData();
+                signOut(auth)
+                    .then(() => {
+                        window.location.href = "login.html";
+                    })
+                    .catch((error) => {
+                        alert("حدث خطأ أثناء تسجيل الخروج");
+                    });
+            }
+        };
+        
+        window.showDebugInfo = async function() {
+            const user = auth.currentUser;
+            if (!user) return;
+            
+            try {
+                const allDocs = await getDocs(collection(db, "plans"));
+                let debugInfo = `=== معلومات التصحيح ===\n`;
+                debugInfo += `👤 المستخدم: ${user.email}\n`;
+                debugInfo += `📧 الإيميل: ${user.email}\n`;
+                debugInfo += `📊 عدد المستندات: ${allDocs.size}\n\n`;
+                
+                debugInfo += `📄 جميع المستندات:\n`;
+                allDocs.forEach(docSnap => {
+                    const data = docSnap.data();
+                    debugInfo += `\n📍 Document ID: "${docSnap.id}"\n`;
+                    debugInfo += `📋 الإيميل: ${data.email || 'لا يوجد'}\n`;
+                    debugInfo += `👤 الاسم: ${data.name || 'لا يوجد'}\n`;
+                });
+                
+                console.log(debugInfo);
+                alert(`✅ تم فحص البيانات\nافتح Console (F12) لرؤية التفاصيل`);
+                
+            } catch (error) {
+                console.error("❌ خطأ في التصحيح:", error);
+            }
+        };
+        
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'error' ? '#f8d7da' : '#d4edda'};
+                color: ${type === 'error' ? '#721c24' : '#155724'};
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+                z-index: 9999;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                border-right: 4px solid ${type === 'error' ? '#f5c6cb' : '#c3e6cb'};
+            `;
+            
+            const icon = type === 'error' ? '❌' : '✅';
+            notification.innerHTML = `
+                <span style="font-size: 20px;">${icon}</span>
+                <span>${message}</span>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 5000);
+        }
+        
+        window.addEventListener('beforeunload', () => {
+            if (unsubscribeClientData) unsubscribeClientData();
+        });
+    </script>
+</body>
+</html>
