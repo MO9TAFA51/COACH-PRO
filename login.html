@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>COACH PRO | تسجيل دخول/تسجيل جديد</title>
+    <title>COACH PRO | تسجيل الدخول</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         * {
@@ -14,7 +14,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #1a2980, #26d0ce);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -22,287 +22,236 @@
             padding: 20px;
         }
         
-        .container {
-            display: flex;
-            width: 100%;
-            max-width: 1000px;
-            min-height: 600px;
+        .login-container {
             background: white;
-            border-radius: 20px;
+            border-radius: 25px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.2);
+            max-width: 450px;
+            width: 100%;
         }
         
-        .login-side {
-            flex: 1;
-            padding: 50px;
-            background: #f8f9fa;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        
-        .signup-side {
-            flex: 1;
-            padding: 50px;
+        .login-header {
             background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            padding: 40px 30px;
+            text-align: center;
         }
         
-        .logo {
-            font-size: 32px;
-            font-weight: bold;
-            margin-bottom: 20px;
+        .login-header h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            justify-content: center;
+            gap: 15px;
         }
         
-        .login-side .logo {
-            color: #667eea;
-        }
-        
-        .signup-side .logo {
-            color: white;
-        }
-        
-        h2 {
-            font-size: 28px;
-            margin-bottom: 10px;
-        }
-        
-        .subtitle {
-            color: #666;
-            margin-bottom: 30px;
+        .login-header p {
             font-size: 16px;
+            opacity: 0.95;
         }
         
-        .signup-side .subtitle {
-            color: rgba(255,255,255,0.9);
+        .login-body {
+            padding: 40px 35px;
         }
         
         .form-group {
             margin-bottom: 25px;
-            position: relative;
         }
         
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-weight: 600;
-            color: #333;
+            color: #2c3e50;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .signup-side .form-group label {
-            color: white;
-        }
-        
-        .form-group input,
-        .form-group select {
+        .form-group input {
             width: 100%;
-            padding: 14px 20px;
+            padding: 14px 18px;
             border: 2px solid #e0e0e0;
             border-radius: 12px;
             font-size: 16px;
             transition: all 0.3s;
-            background: white;
         }
         
-        .signup-side .form-group input,
-        .signup-side .form-group select {
-            background: rgba(255,255,255,0.9);
-            border-color: rgba(255,255,255,0.3);
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus {
+        .form-group input:focus {
             outline: none;
             border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
         }
         
-        .signup-side .form-group input:focus,
-        .signup-side .form-group select:focus {
-            border-color: white;
-        }
-        
-        .btn {
+        .btn-login {
             width: 100%;
             padding: 16px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
             border: none;
             border-radius: 12px;
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 10px;
+            transition: all 0.3s;
             margin-top: 10px;
         }
         
-        .login-btn {
-            background: linear-gradient(to right, #667eea, #764ba2);
-            color: white;
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
         }
         
-        .signup-btn {
-            background: white;
-            color: #667eea;
-        }
-        
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        .btn-login:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
         }
         
         .info-box {
-            background: rgba(255,255,255,0.1);
+            background: #e8f4ff;
             padding: 20px;
             border-radius: 12px;
-            margin-top: 30px;
-            border-right: 4px solid rgba(255,255,255,0.3);
+            margin-top: 25px;
+            border-right: 4px solid #667eea;
         }
         
         .info-box h4 {
             display: flex;
             align-items: center;
             gap: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            color: #2c3e50;
+            font-size: 16px;
         }
         
         .info-box ul {
             list-style: none;
-            padding-right: 20px;
+            padding: 0;
         }
         
         .info-box li {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
-        }
-        
-        .login-side .info-box {
-            background: #e8f4ff;
-            border-right-color: #667eea;
+            color: #555;
+            font-size: 14px;
         }
         
         .message {
-            padding: 15px;
-            border-radius: 8px;
+            padding: 16px;
+            border-radius: 10px;
             margin-top: 20px;
             text-align: center;
             display: none;
+            font-size: 15px;
         }
         
         .success {
             background: #d4edda;
             color: #155724;
-            border: 1px solid #c3e6cb;
+            border: 2px solid #c3e6cb;
         }
         
         .error {
             background: #f8d7da;
             color: #721c24;
-            border: 1px solid #f5c6cb;
+            border: 2px solid #f5c6cb;
         }
         
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-            
-            .login-side, .signup-side {
-                padding: 30px;
+        .signup-link {
+            text-align: center;
+            padding: 25px;
+            background: #f8f9fa;
+            color: #666;
+            font-size: 15px;
+        }
+        
+        .signup-link a {
+            color: #667eea;
+            font-weight: 600;
+            text-decoration: none;
+        }
+        
+        .signup-link a:hover {
+            text-decoration: underline;
+        }
+        
+        @media (max-width: 480px) {
+            .login-body {
+                padding: 30px 25px;
             }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- تسجيل الدخول -->
-        <div class="login-side">
-            <div class="logo">
-                <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
-            </div>
-            <h2>مرحباً بعودتك</h2>
-            <p class="subtitle">سجل دخولك لمتابعة برنامجك الرياضي</p>
-            
+    <div class="login-container">
+        <div class="login-header">
+            <h1>
+                <i class="fas fa-dumbbell"></i>
+                COACH PRO
+            </h1>
+            <p>مرحباً بعودتك! سجل دخولك للمتابعة</p>
+        </div>
+        
+        <div class="login-body">
             <form id="loginForm">
                 <div class="form-group">
-                    <label for="loginEmail"><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
+                    <label>
+                        <i class="fas fa-envelope"></i>
+                        البريد الإلكتروني
+                    </label>
                     <input type="email" id="loginEmail" placeholder="example@email.com" required>
                 </div>
                 
                 <div class="form-group">
-                    <label for="loginPassword"><i class="fas fa-lock"></i> كلمة المرور</label>
+                    <label>
+                        <i class="fas fa-lock"></i>
+                        كلمة المرور
+                    </label>
                     <input type="password" id="loginPassword" placeholder="أدخل كلمة المرور" required>
                 </div>
                 
-                <button type="submit" class="btn login-btn">
-                    <i class="fas fa-sign-in-alt"></i> تسجيل الدخول
+                <button type="submit" class="btn-login" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    تسجيل الدخول
                 </button>
             </form>
             
             <div id="loginMessage" class="message"></div>
-        </div>
-        
-        <!-- تسجيل جديد -->
-        <div class="signup-side">
-            <div class="logo">
-                <i class="fas fa-user-plus"></i> تسجيل جديد
-            </div>
-            <h2>انضم إلينا الآن</h2>
-            <p class="subtitle">سجل كمتدرّب جديد وابدأ رحلتك الرياضية</p>
-            
-            <form id="signupForm">
-                <div class="form-group">
-                    <label for="signupName"><i class="fas fa-user"></i> الاسم الكامل</label>
-                    <input type="text" id="signupName" placeholder="أحمد محمد" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="signupEmail"><i class="fas fa-envelope"></i> البريد الإلكتروني</label>
-                    <input type="email" id="signupEmail" placeholder="ahmed@example.com" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="signupPassword"><i class="fas fa-lock"></i> كلمة المرور</label>
-                    <input type="password" id="signupPassword" placeholder="6 أحرف على الأقل" required minlength="6">
-                </div>
-                
-                <div class="form-group">
-                    <label for="signupGoal"><i class="fas fa-bullseye"></i> الهدف الرياضي</label>
-                    <select id="signupGoal">
-                        <option value="فقدان الوزن">فقدان الوزن</option>
-                        <option value="بناء العضلات">بناء العضلات</option>
-                        <option value="تحسين اللياقة">تحسين اللياقة</option>
-                        <option value="التنشيف">التنشيف</option>
-                        <option value="زيادة القوة">زيادة القوة</option>
-                    </select>
-                </div>
-                
-                <button type="submit" class="btn signup-btn">
-                    <i class="fas fa-user-plus"></i> تسجيل حساب جديد
-                </button>
-            </form>
-            
-            <div id="signupMessage" class="message"></div>
             
             <div class="info-box">
-                <h4><i class="fas fa-check-circle"></i> مميزات التسجيل:</h4>
+                <h4>
+                    <i class="fas fa-info-circle"></i>
+                    معلومات مهمة
+                </h4>
                 <ul>
-                    <li><i class="fas fa-dumbbell"></i> نظام تدريبي شخصي</li>
-                    <li><i class="fas fa-utensils"></i> نظام غذائي متكامل</li>
-                    <li><i class="fas fa-chart-line"></i> متابعة مستمرة من الكوتش</li>
-                    <li><i class="fas fa-history"></i> سجل تقدمك الرياضي</li>
+                    <li>
+                        <i class="fas fa-user-shield"></i>
+                        <strong>للأدمن:</strong> admin@gym.com
+                    </li>
+                    <li>
+                        <i class="fas fa-user"></i>
+                        <strong>للمتدرب:</strong> الإيميل المسجل
+                    </li>
+                    <li>
+                        <i class="fas fa-key"></i>
+                        نسيت كلمة المرور؟ تواصل مع الكوتش
+                    </li>
                 </ul>
             </div>
+        </div>
+        
+        <div class="signup-link">
+            ليس لديك حساب؟ 
+            <a href="signup.html">سجل الآن مجاناً</a>
         </div>
     </div>
 
@@ -310,14 +259,8 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { 
             getAuth, 
-            signInWithEmailAndPassword, 
-            createUserWithEmailAndPassword 
+            signInWithEmailAndPassword 
         } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            doc, 
-            setDoc 
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
         
         const firebaseConfig = {
             apiKey: "AIzaSyBeUimi5NKwV2LOgi47-LhNFKYju2WVKUU",
@@ -329,7 +272,6 @@
         };
         
         const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
         const auth = getAuth(app);
         
         document.getElementById('loginForm').addEventListener('submit', async (e) => {
@@ -338,16 +280,22 @@
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value;
             const messageDiv = document.getElementById('loginMessage');
+            const loginBtn = document.getElementById('loginBtn');
             
             messageDiv.style.display = 'none';
             
+            if (!email || !password) {
+                showMessage('يرجى ملء جميع الحقول', 'error');
+                return;
+            }
+            
             try {
-                const userCredential = await signInWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
+                loginBtn.disabled = true;
+                loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري تسجيل الدخول...';
                 
-                messageDiv.className = 'message success';
-                messageDiv.innerHTML = `<i class="fas fa-check-circle"></i> تم تسجيل الدخول بنجاح! جاري التوجيه...`;
-                messageDiv.style.display = 'block';
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                
+                showMessage('تم تسجيل الدخول بنجاح! جاري التوجيه...', 'success');
                 
                 setTimeout(() => {
                     if (email === "admin@gym.com") {
@@ -358,127 +306,43 @@
                 }, 1500);
                 
             } catch (error) {
-                messageDiv.className = 'message error';
-                messageDiv.style.display = 'block';
+                loginBtn.disabled = false;
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> تسجيل الدخول';
                 
-                if (error.code === 'auth/invalid-credential') {
-                    messageDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> الإيميل أو كلمة المرور غير صحيحة`;
+                console.error('Login error:', error);
+                
+                if (error.code === 'auth/invalid-credential' || error.code === 'auth/wrong-password') {
+                    showMessage('الإيميل أو كلمة المرور غير صحيحة', 'error');
                 } else if (error.code === 'auth/user-not-found') {
-                    messageDiv.innerHTML = `<i class="fas fa-user-slash"></i> الحساب غير موجود. سجل حساب جديد`;
-                } else if (error.code === 'auth/wrong-password') {
-                    messageDiv.innerHTML = `<i class="fas fa-key"></i> كلمة المرور غير صحيحة`;
-                } else {
-                    messageDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> خطأ: ${error.message}`;
-                }
-            }
-        });
-        
-        document.getElementById('signupForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            
-            const name = document.getElementById('signupName').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const password = document.getElementById('signupPassword').value;
-            const goal = document.getElementById('signupGoal').value;
-            const messageDiv = document.getElementById('signupMessage');
-            
-            messageDiv.style.display = 'none';
-            
-            if (!name || !email || !password) {
-                messageDiv.className = 'message error';
-                messageDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> يرجى ملء جميع الحقول`;
-                messageDiv.style.display = 'block';
-                return;
-            }
-            
-            if (password.length < 6) {
-                messageDiv.className = 'message error';
-                messageDiv.innerHTML = `<i class="fas fa-key"></i> كلمة المرور يجب أن تكون 6 أحرف على الأقل`;
-                messageDiv.style.display = 'block';
-                return;
-            }
-            
-            try {
-                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-                const user = userCredential.user;
-                
-                await setDoc(doc(db, "plans", email), {
-                    name: name,
-                    email: email,
-                    goal: goal,
-                    diet: "لم يتم تعيين نظام غذائي بعد",
-                    workout: "لم يتم تعيين تمارين بعد",
-                    isActive: true,
-                    role: "client",
-                    createdAt: new Date().toLocaleString('ar-SA'),
-                    lastUpdated: new Date().toLocaleString('ar-SA'),
-                    coach: "admin@gym.com"
-                });
-                
-                await setDoc(doc(db, "users", user.uid), {
-                    email: email,
-                    name: name,
-                    role: "client",
-                    goal: goal,
-                    coach: "admin@gym.com",
-                    createdAt: new Date().toISOString(),
-                    lastLogin: new Date().toISOString()
-                });
-                
-                messageDiv.className = 'message success';
-                messageDiv.innerHTML = `
-                    <i class="fas fa-check-circle"></i> تم التسجيل بنجاح!<br>
-                    <strong>الاسم:</strong> ${name}<br>
-                    <strong>الإيميل:</strong> ${email}<br>
-                    <strong>الهدف:</strong> ${goal}<br><br>
-                    <small>جاري تسجيل الدخول تلقائياً...</small>
-                `;
-                messageDiv.style.display = 'block';
-                
-                setTimeout(() => {
-                    window.location.href = "client.html";
-                }, 2000);
-                
-            } catch (error) {
-                messageDiv.className = 'message error';
-                messageDiv.style.display = 'block';
-                
-                if (error.code === 'auth/email-already-in-use') {
-                    messageDiv.innerHTML = `
-                        <i class="fas fa-envelope"></i> هذا الإيميل مسجل بالفعل!<br>
-                        <a href="#" onclick="switchToLogin('${email}')" style="color:white; text-decoration:underline">
-                            سجل دخولك هنا
-                        </a>
-                    `;
+                    showMessage('هذا الحساب غير موجود. سجل حساب جديد', 'error');
+                } else if (error.code === 'auth/too-many-requests') {
+                    showMessage('محاولات كثيرة جداً. حاول مرة أخرى لاحقاً', 'error');
                 } else if (error.code === 'auth/invalid-email') {
-                    messageDiv.innerHTML = `<i class="fas fa-at"></i> صيغة الإيميل غير صحيحة`;
-                } else if (error.code === 'auth/weak-password') {
-                    messageDiv.innerHTML = `<i class="fas fa-key"></i> كلمة المرور ضعيفة، اختر كلمة أقوى`;
+                    showMessage('صيغة البريد الإلكتروني غير صحيحة', 'error');
                 } else {
-                    messageDiv.innerHTML = `<i class="fas fa-exclamation-circle"></i> خطأ: ${error.message}`;
+                    showMessage(`حدث خطأ: ${error.message}`, 'error');
                 }
             }
         });
         
-        window.switchToLogin = function(email) {
-            document.getElementById('loginEmail').value = email;
-            document.getElementById('loginPassword').focus();
-        };
+        function showMessage(text, type) {
+            const messageDiv = document.getElementById('loginMessage');
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerHTML = type === 'success' 
+                ? `<i class="fas fa-check-circle"></i> ${text}`
+                : `<i class="fas fa-exclamation-triangle"></i> ${text}`;
+            messageDiv.style.display = 'block';
+        }
         
+        // Enter key support
         document.querySelectorAll('input').forEach(input => {
             input.addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') {
                     e.preventDefault();
-                    const form = input.closest('form');
-                    if (form) {
-                        const submitBtn = form.querySelector('button[type="submit"]');
-                        if (submitBtn) submitBtn.click();
-                    }
+                    document.getElementById('loginBtn').click();
                 }
             });
         });
     </script>
 </body>
-
 </html>
-
