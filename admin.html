@@ -27,8 +27,6 @@
         <header>
             <h1><i class="fas fa-tachometer-alt"></i> إدارة المتدربين</h1>
             <div class="header-actions">
-                <button onclick="debugFirestore()" class="btn-debug">
-                </button>
                 <div class="stats">
                     <i class="fas fa-user-friends"></i>
                     <span>المتدربين: <strong id="clientCount">0</strong></span>
@@ -64,121 +62,469 @@
                 <span class="close-btn" onclick="closeModal()">&times;</span>
             </div>
             <div class="modal-body">
-                <form id="planForm">
-                    <div class="form-group">
-                        <label for="dietPlan"><i class="fas fa-utensils"></i> النظام الغذائي</label>
-                        <textarea id="dietPlan" placeholder="اكتب النظام الغذائي هنا..." rows="8"></textarea>
+                <!-- مرحلة 1: اختيار نوع النظام -->
+                <div id="step1" class="step-container">
+                    <h3 style="text-align:center; margin-bottom:30px; color:#2c3e50;">
+                        <i class="fas fa-clipboard-list"></i> اختر ما تريد تعديله
+                    </h3>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:20px;">
+                        <button onclick="selectPlanType('diet')" class="plan-type-btn">
+                            <i class="fas fa-utensils"></i>
+                            <span>النظام الغذائي</span>
+                        </button>
+                        <button onclick="selectPlanType('workout')" class="plan-type-btn">
+                            <i class="fas fa-dumbbell"></i>
+                            <span>جدول التمارين</span>
+                        </button>
                     </div>
+                </div>
+
+                <!-- مرحلة 2: تعديل النظام الغذائي -->
+                <div id="step2-diet" class="step-container" style="display:none;">
+                    <button onclick="backToStep1()" class="back-btn">
+                        <i class="fas fa-arrow-right"></i> رجوع
+                    </button>
+                    <h3 style="margin:20px 0; color:#2c3e50;">
+                        <i class="fas fa-utensils"></i> النظام الغذائي
+                    </h3>
                     
-                    <div class="form-group">
-                        <label for="workoutPlan"><i class="fas fa-dumbbell"></i> جدول التمارين</label>
-                        <textarea id="workoutPlan" placeholder="اكتب جدول التمارين هنا..." rows="8"></textarea>
+                    <div class="meal-table">
+                        <div class="meal-row meal-header">
+                            <div class="meal-label">الوجبة</div>
+                            <div class="meal-content">التفاصيل</div>
+                        </div>
+                        
+                        <div class="meal-row">
+                            <div class="meal-label">
+                                <i class="fas fa-sun"></i> الوجبة الأولى
+                            </div>
+                            <div class="meal-content">
+                                <textarea id="meal1" placeholder="مثال: 3 بيضات مسلوقة، خبز أسمر، كوب حليب"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="meal-row">
+                            <div class="meal-label">
+                                <i class="fas fa-apple-alt"></i> الوجبة الثانية
+                            </div>
+                            <div class="meal-content">
+                                <textarea id="meal2" placeholder="مثال: حفنة مكسرات، موزة"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="meal-row">
+                            <div class="meal-label">
+                                <i class="fas fa-hamburger"></i> الوجبة الثالثة
+                            </div>
+                            <div class="meal-content">
+                                <textarea id="meal3" placeholder="مثال: صدر دجاج مشوي، أرز، سلطة"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="meal-row">
+                            <div class="meal-label">
+                                <i class="fas fa-cookie"></i> الوجبة الرابعة
+                            </div>
+                            <div class="meal-content">
+                                <textarea id="meal4" placeholder="مثال: زبادي، فواكه"></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="meal-row">
+                            <div class="meal-label">
+                                <i class="fas fa-moon"></i> الوجبة الخامسة
+                            </div>
+                            <div class="meal-content">
+                                <textarea id="meal5" placeholder="مثال: سمك مشوي، خضار"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="meal-row">
+                            <div class="meal-label">
+                                <i class="fas fa-plus-circle"></i> وجبة إضافية
+                            </div>
+                            <div class="meal-content">
+                                <textarea id="meal6" placeholder="وجبة إضافية (اختياري)"></textarea>
+                            </div>
+                        </div>
                     </div>
                     
                     <div class="modal-actions">
                         <button type="button" class="btn-secondary" onclick="closeModal()">
                             <i class="fas fa-times"></i> إلغاء
                         </button>
-                        <button type="submit" class="btn-save">
-                            <i class="fas fa-save"></i> حفظ التغييرات
+                        <button type="button" onclick="saveDietPlan()" class="btn-save">
+                            <i class="fas fa-save"></i> حفظ النظام الغذائي
                         </button>
                     </div>
-                </form>
-            </div>
-        </div>
-    </div>
+                </div>
 
-    <script type="module" src="script.js"></script>
-</body>
-</html><!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>لوحة التحكم | COACH PRO</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-</head>
-<body>
-    <!-- الشريط الجانبي -->
-    <div class="sidebar">
-        <h2><i class="fas fa-dumbbell"></i> COACH PRO</h2>
-        <ul>
-            <li class="active">
-                <i class="fas fa-users"></i> <span>المتدربين</span>
-            </li>
-            <li onclick="logout()" class="logout">
-                <i class="fas fa-sign-out-alt"></i> <span>تسجيل الخروج</span>
-            </li>
-        </ul>
-    </div>
+                <!-- مرحلة 2: اختيار عدد أيام التمرين -->
+                <div id="step2-workout" class="step-container" style="display:none;">
+                    <button onclick="backToStep1()" class="back-btn">
+                        <i class="fas fa-arrow-right"></i> رجوع
+                    </button>
+                    <h3 style="margin:20px 0; text-align:center; color:#2c3e50;">
+                        <i class="fas fa-calendar-week"></i> اختر عدد أيام التدريب في الأسبوع
+                    </h3>
+                    
+                    <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(120px, 1fr)); gap:15px; margin-top:30px;">
+                        <button onclick="selectWorkoutDays(3)" class="days-btn">
+                            <i class="fas fa-calendar-day"></i>
+                            <span>3 أيام</span>
+                        </button>
+                        <button onclick="selectWorkoutDays(4)" class="days-btn">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>4 أيام</span>
+                        </button>
+                        <button onclick="selectWorkoutDays(5)" class="days-btn">
+                            <i class="fas fa-calendar-week"></i>
+                            <span>5 أيام</span>
+                        </button>
+                        <button onclick="selectWorkoutDays(6)" class="days-btn">
+                            <i class="fas fa-calendar"></i>
+                            <span>6 أيام</span>
+                        </button>
+                    </div>
+                </div>
 
-    <!-- المحتوى الرئيسي -->
-    <div class="main-content">
-        <!-- الهيدر -->
-        <header>
-            <h1><i class="fas fa-tachometer-alt"></i> إدارة المتدربين</h1>
-            <div class="header-actions">
-                </button>
-                <div class="stats">
-                    <i class="fas fa-user-friends"></i>
-                    <span>المتدربين: <strong id="clientCount">0</strong></span>
+                <!-- مرحلة 3: جدول التمارين التفصيلي -->
+                <div id="step3-workout-table" class="step-container" style="display:none;">
+                    <button onclick="backToWorkoutDays()" class="back-btn">
+                        <i class="fas fa-arrow-right"></i> رجوع
+                    </button>
+                    <h3 style="margin:20px 0; color:#2c3e50;">
+                        <i class="fas fa-dumbbell"></i> جدول التمارين - <span id="selectedDaysCount"></span> أيام
+                    </h3>
+                    
+                    <div id="workoutTableContainer" style="overflow-x: auto;">
+                        <!-- سيتم إنشاء الجدول ديناميكياً هنا -->
+                    </div>
+                    
+                    <div class="modal-actions" style="margin-top:20px;">
+                        <button type="button" class="btn-secondary" onclick="closeModal()">
+                            <i class="fas fa-times"></i> إلغاء
+                        </button>
+                        <button type="button" onclick="saveWorkoutPlan()" class="btn-save">
+                            <i class="fas fa-save"></i> حفظ جدول التمارين
+                        </button>
+                    </div>
                 </div>
             </div>
-        </header>
-
-        <!-- قائمة المتدربين -->
-        <section class="clients-list">
-            <div class="table-container">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>المتدرب</th>
-                            <th>الهدف</th>
-                            <th>الحالة</th>
-                            <th>الإجراءات</th>
-                        </tr>
-                    </thead>
-                    <tbody id="clientTableBody">
-                        <!-- سيتم تعبئته بالبيانات -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
-    </div>
-
-    <!-- نافذة تعديل النظام -->
-    <div id="planModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2><i class="fas fa-edit"></i> تعديل نظام: <span id="clientNameDisplay" style="color:#FFD700;"></span></h2>
-                <span class="close-btn" onclick="closeModal()">&times;</span>
-            </div>
-            <div class="modal-body">
-                <form id="planForm">
-                    <div class="form-group">
-                        <label for="dietPlan"><i class="fas fa-utensils"></i> النظام الغذائي</label>
-                        <textarea id="dietPlan" placeholder="اكتب النظام الغذائي هنا..." rows="8"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="workoutPlan"><i class="fas fa-dumbbell"></i> جدول التمارين</label>
-                        <textarea id="workoutPlan" placeholder="اكتب جدول التمارين هنا..." rows="8"></textarea>
-                    </div>
-                    
-                    <div class="modal-actions">
-                        <button type="button" class="btn-secondary" onclick="closeModal()">
-                            <i class="fas fa-times"></i> إلغاء
-                        </button>
-                        <button type="submit" class="btn-save">
-                            <i class="fas fa-save"></i> حفظ التغييرات
-                        </button>
-                    </div>
-                </form>
-            </div>
         </div>
     </div>
 
     <script type="module" src="script.js"></script>
+    
+    <style>
+        /* تكبير النافذة المنبثقة */
+        .modal-content {
+            width: 95% !important;
+            max-width: 1400px !important;
+            margin: 20px auto !important;
+            max-height: 95vh !important;
+        }
+
+        .modal-body {
+            padding: 30px !important;
+            max-height: calc(95vh - 100px) !important;
+            overflow-y: auto !important;
+        }
+
+        .step-container {
+            min-height: 300px;
+        }
+
+        .plan-type-btn, .days-btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 30px 20px;
+            border-radius: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .plan-type-btn i {
+            font-size: 40px;
+        }
+
+        .days-btn i {
+            font-size: 35px;
+        }
+
+        .plan-type-btn:hover, .days-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+
+        .back-btn {
+            background: #95a5a6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .back-btn:hover {
+            background: #7f8c8d;
+        }
+
+        .meal-table {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .meal-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .meal-row:last-child {
+            border-bottom: none;
+        }
+
+        .meal-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-weight: bold;
+            font-size: 16px;
+        }
+
+        .meal-label {
+            padding: 15px;
+            background: #f8f9fa;
+            border-left: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .meal-header .meal-label {
+            background: transparent;
+            color: white;
+            border-left-color: rgba(255,255,255,0.2);
+        }
+
+        .meal-content {
+            padding: 10px;
+        }
+
+        .meal-header .meal-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .meal-content textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+
+        .meal-content textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* جدول التمارين الجديد */
+        .workout-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-width: 100%;
+            table-layout: fixed;
+        }
+
+        #workoutTableContainer {
+            overflow-x: auto;
+            overflow-y: visible;
+            max-height: none;
+        }
+
+        .workout-table thead {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .workout-table th {
+            padding: 15px 10px;
+            text-align: center;
+            font-weight: 600;
+            font-size: 14px;
+            border-left: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .workout-table th:first-child {
+            border-right: none;
+        }
+
+        .workout-table tbody tr {
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .workout-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .workout-table td {
+            padding: 10px;
+            text-align: center;
+            border-left: 1px solid #e0e0e0;
+        }
+
+        .workout-table td:first-child {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            text-align: right;
+            padding-right: 15px;
+        }
+
+        .workout-table input[type="text"],
+        .workout-table input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .workout-table input[type="text"]:focus,
+        .workout-table input[type="number"]:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+        }
+
+        .workout-table input[type="text"] {
+            text-align: right;
+        }
+
+        .add-exercise-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            margin-top: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s;
+        }
+
+        .add-exercise-btn:hover {
+            background: #2980b9;
+        }
+
+        .day-section {
+            margin-bottom: 30px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .modal-content {
+                width: 98% !important;
+                margin: 10px auto !important;
+                max-height: 98vh !important;
+            }
+
+            .modal-body {
+                padding: 15px !important;
+                max-height: calc(98vh - 80px) !important;
+            }
+
+            .meal-row {
+                grid-template-columns: 1fr;
+            }
+
+            .meal-label {
+                border-left: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .workout-table {
+                font-size: 12px;
+            }
+
+            .workout-table th,
+            .workout-table td {
+                padding: 8px 5px;
+            }
+
+            .workout-table input {
+                padding: 6px !important;
+                font-size: 12px !important;
+            }
+        }
+
+        /* تحسين السكرول */
+        .modal-body::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        .modal-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 5px;
+        }
+
+        .modal-body::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #764ba2, #667eea);
+        }
+    </style>
 </body>
 </html>
