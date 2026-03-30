@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COACH PRO | Live Demo</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
+        body {
+            min-height:100vh;
+            background:linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+            display:flex; align-items:center; justify-content:center; padding:20px;
+        }
+        .wrapper { max-width:820px; width:100%; text-align:center; }
+
+        .header { margin-bottom:36px; animation:fadeDown .7s ease; }
+        .logo-box {
+            width:88px; height:88px; margin:0 auto 18px;
+            background:linear-gradient(135deg,#3498db,#2980b9);
+            border-radius:24px; display:flex; align-items:center; justify-content:center;
+            box-shadow:0 15px 40px rgba(52,152,219,.4);
+        }
+        .logo-box i { font-size:44px; color:#fff; }
+        .header h1 { font-size:42px; font-weight:800; color:#fff; letter-spacing:2px; }
+        .header h1 span { color:#3498db; }
+        .header p { color:rgba(255,255,255,.5); margin-top:8px; font-size:16px; }
+
+        .live-badge {
+            display:inline-flex; align-items:center; gap:8px;
+            background:rgba(52,152,219,.12); border:1px solid rgba(52,152,219,.35);
+            color:#3498db; padding:7px 20px; border-radius:50px;
+            font-size:12px; font-weight:700; letter-spacing:1.2px; text-transform:uppercase;
+            margin-bottom:36px;
+        }
+        .live-dot { width:8px; height:8px; background:#3498db; border-radius:50%; animation:blink 1.2s infinite; }
+
+        .notice {
+            background:rgba(255,193,7,.08); border:1px solid rgba(255,193,7,.25);
+            border-radius:14px; padding:14px 20px; margin-bottom:30px;
+            color:rgba(255,220,100,.85); font-size:13px;
+            display:flex; align-items:center; gap:10px;
+            animation:fadeUp .7s ease .1s both;
+        }
+
+        .cards { display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:30px; animation:fadeUp .7s ease .2s both; }
+
+        .card {
+            background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.1);
+            border-radius:22px; padding:36px 28px;
+            cursor:pointer; transition:all .3s; text-align:left;
+        }
+        .card:hover { transform:translateY(-7px); }
+        .card.coach:hover { border-color:rgba(52,152,219,.5); box-shadow:0 22px 55px rgba(52,152,219,.2); }
+        .card.client:hover { border-color:rgba(46,204,113,.5); box-shadow:0 22px 55px rgba(46,204,113,.2); }
+
+        .card-icon {
+            width:70px; height:70px; border-radius:18px;
+            display:flex; align-items:center; justify-content:center;
+            font-size:32px; margin-bottom:18px;
+        }
+        .coach .card-icon { background:linear-gradient(135deg,#2980b9,#3498db); box-shadow:0 8px 25px rgba(52,152,219,.35); }
+        .client .card-icon { background:linear-gradient(135deg,#27ae60,#2ecc71); box-shadow:0 8px 25px rgba(46,204,113,.35); }
+        .card-icon i { color:#fff; }
+
+        .card h2 { font-size:22px; font-weight:700; color:#fff; margin-bottom:8px; }
+        .card p { color:rgba(255,255,255,.45); font-size:13px; margin-bottom:22px; line-height:1.6; }
+
+        .feat { list-style:none; margin-bottom:28px; }
+        .feat li { display:flex; align-items:center; gap:9px; color:rgba(255,255,255,.65); font-size:13px; padding:5px 0; border-bottom:1px solid rgba(255,255,255,.05); }
+        .feat li:last-child { border:none; }
+        .coach .feat li i { color:#3498db; }
+        .client .feat li i { color:#2ecc71; }
+
+        .btn {
+            width:100%; padding:14px; border-radius:12px; border:none; cursor:pointer;
+            font-size:15px; font-weight:700; color:#fff;
+            display:flex; align-items:center; justify-content:center; gap:9px; transition:all .3s;
+        }
+        .coach .btn { background:linear-gradient(135deg,#2980b9,#3498db); }
+        .client .btn { background:linear-gradient(135deg,#27ae60,#2ecc71); }
+        .btn:hover { transform:scale(1.03); }
+
+        .footer { color:rgba(255,255,255,.25); font-size:12px; animation:fadeUp .7s ease .4s both; }
+
+        @keyframes fadeDown { from{opacity:0;transform:translateY(-25px)} to{opacity:1;transform:translateY(0)} }
+        @keyframes fadeUp   { from{opacity:0;transform:translateY(25px)}  to{opacity:1;transform:translateY(0)} }
+        @keyframes blink    { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+        @media(max-width:600px){
+            .cards{grid-template-columns:1fr;}
+            .header h1{font-size:32px;}
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+
+    <div class="header">
+        <div class="logo-box"><i class="fas fa-dumbbell"></i></div>
+        <h1>COACH <span>PRO</span></h1>
+        <p>Gym Management System</p>
+    </div>
+
+    <div class="live-badge"><span class="live-dot"></span> Live Demo — No Login Required</div>
+
+    <div class="notice">
+        <i class="fas fa-info-circle" style="font-size:17px;flex-shrink:0"></i>
+        <span>This is a <strong>demo preview</strong>. All data is sample data — no real accounts or Firebase needed.</span>
+    </div>
+
+    <div class="cards">
+        <div class="card coach" onclick="location.href='admin-demo.html'">
+            <div class="card-icon"><i class="fas fa-user-shield"></i></div>
+            <h2>Coach / Admin</h2>
+            <p>View the full admin dashboard with client management tools.</p>
+            <ul class="feat">
+                <li><i class="fas fa-check-circle"></i> Clients list & status</li>
+                <li><i class="fas fa-check-circle"></i> Assign workout plans</li>
+                <li><i class="fas fa-check-circle"></i> Assign diet plans</li>
+                <li><i class="fas fa-check-circle"></i> Activate / deactivate clients</li>
+            </ul>
+            <button class="btn"><i class="fas fa-sign-in-alt"></i> Enter as Coach</button>
+        </div>
+
+        <div class="card client" onclick="location.href='client-demo.html'">
+            <div class="card-icon"><i class="fas fa-running"></i></div>
+            <h2>Client / Member</h2>
+            <p>Experience the client portal with a full personal fitness plan.</p>
+            <ul class="feat">
+                <li><i class="fas fa-check-circle"></i> Personal diet plan</li>
+                <li><i class="fas fa-check-circle"></i> Workout schedule</li>
+                <li><i class="fas fa-check-circle"></i> Goal & join date</li>
+                <li><i class="fas fa-check-circle"></i> Coach info</li>
+            </ul>
+            <button class="btn"><i class="fas fa-sign-in-alt"></i> Enter as Client</button>
+        </div>
+    </div>
+
+    <div class="footer">COACH PRO &nbsp;·&nbsp; Demo Version &nbsp;·&nbsp; No Firebase &nbsp;·&nbsp; Static Only</div>
+</div>
+</body>
+</html>

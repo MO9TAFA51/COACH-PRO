@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | COACH PRO Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { direction:ltr; }
+        .sidebar { right:auto; left:0; }
+        .main-content { margin-right:0; margin-left:250px; }
+        thead th { text-align:left; }
+        tbody td { text-align:left; }
+        .sidebar li { flex-direction:row; }
+        .sidebar li:hover { transform:translateX(5px); }
+        tbody tr:hover { transform:translateX(5px); }
+        .notification { right:auto; left:30px; border-right:none; border-left:5px solid; }
+        .notification.success { border-left-color:#2ecc71; }
+        .notification.error   { border-left-color:#e74c3c; }
+        .notification.info    { border-left-color:#3498db; }
+
+        /* Demo banner */
+        .demo-banner {
+            position:fixed; top:0; left:0; right:0; z-index:9999;
+            background:linear-gradient(90deg,#f39c12,#e67e22);
+            color:#fff; text-align:center; padding:10px 20px;
+            font-size:13px; font-weight:700; letter-spacing:.5px;
+            display:flex; align-items:center; justify-content:center; gap:14px;
+        }
+        .demo-banner a { color:#fff; text-decoration:underline; }
+        body { padding-top:42px; }
+        .sidebar { top:42px; height:calc(100vh - 42px); }
+
+        /* Read-only overlay hint */
+        .readonly-badge {
+            display:inline-flex; align-items:center; gap:6px;
+            background:rgba(231,76,60,.15); border:1px solid rgba(231,76,60,.35);
+            color:#e74c3c; padding:5px 14px; border-radius:20px;
+            font-size:12px; font-weight:700;
+        }
+
+        /* Modal */
+        .modal-content { width:95% !important; max-width:1200px !important; margin:20px auto !important; max-height:95vh !important; }
+        .modal-body { padding:30px !important; max-height:calc(95vh - 100px) !important; overflow-y:auto !important; }
+        .step-container { min-height:200px; }
+        .plan-type-btn, .days-btn {
+            background:linear-gradient(135deg,#2c3e50,#34495e); color:white;
+            border:none; padding:30px 20px; border-radius:15px;
+            font-size:18px; font-weight:bold; cursor:default;
+            transition:all .3s; display:flex; flex-direction:column; align-items:center; gap:15px;
+            box-shadow:0 5px 15px rgba(44,62,80,.3); opacity:.6;
+        }
+        .plan-type-btn i, .days-btn i { font-size:40px; }
+
+        .meal-table { border:2px solid #e0e0e0; border-radius:12px; overflow:hidden; margin-bottom:20px; }
+        .meal-row { display:grid; grid-template-columns:180px 1fr; border-bottom:1px solid #e0e0e0; }
+        .meal-row:last-child { border-bottom:none; }
+        .meal-header { background:linear-gradient(135deg,#2c3e50,#34495e); color:white; font-weight:bold; }
+        .meal-label { padding:15px; background:#f8f9fa; border-right:1px solid #e0e0e0; display:flex; align-items:center; gap:10px; font-weight:600; color:#2c3e50; }
+        .meal-header .meal-label { background:transparent; color:white; border-right-color:rgba(255,255,255,.2); }
+        .meal-content { padding:15px; font-size:15px; color:#2c3e50; display:flex; align-items:center; }
+        .meal-header .meal-content { font-weight:600; }
+
+        .workout-table { width:100%; border-collapse:collapse; margin:15px 0; background:white; border-radius:10px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,.1); }
+        .workout-table thead { background:linear-gradient(135deg,#2c3e50,#34495e); color:white; }
+        .workout-table th { padding:14px 10px; text-align:left; font-size:14px; border-right:1px solid rgba(255,255,255,.2); }
+        .workout-table td { padding:12px 10px; border-bottom:1px solid #eee; border-right:1px solid #eee; font-size:14px; color:#2c3e50; }
+        .workout-table td:first-child { background:#f8f9fa; font-weight:700; }
+        .day-section { margin-bottom:25px; border:2px solid #e0e0e0; border-radius:10px; padding:15px; background:#fafafa; }
+        .day-header { background:linear-gradient(135deg,#2c3e50,#34495e); color:white; padding:12px 20px; border-radius:8px; margin-bottom:15px; display:flex; align-items:center; gap:10px; font-size:18px; font-weight:bold; }
+
+        .info-popup {
+            position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:2000;
+            display:none; align-items:center; justify-content:center;
+        }
+        .info-popup.open { display:flex; }
+        .info-popup-content {
+            background:white; border-radius:20px; padding:35px; max-width:480px; width:90%;
+            box-shadow:0 20px 60px rgba(0,0,0,.3); animation:slideIn .3s ease;
+        }
+        .info-popup-content h3 { color:#2c3e50; margin-bottom:15px; font-size:20px; display:flex; align-items:center; gap:10px; }
+        .info-row { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid #eee; font-size:15px; color:#444; }
+        .info-row:last-of-type { border:none; }
+        .info-row i { color:#3498db; width:20px; text-align:center; }
+        .info-row strong { color:#2c3e50; min-width:90px; display:inline-block; }
+        .close-info { margin-top:20px; width:100%; padding:12px; background:linear-gradient(135deg,#2c3e50,#34495e); color:white; border:none; border-radius:10px; font-size:15px; font-weight:600; cursor:pointer; }
+
+        @keyframes slideIn { from{transform:translateY(-30px);opacity:0} to{transform:translateY(0);opacity:1} }
+
+        @media(max-width:992px){ .sidebar{left:0;right:auto;width:70px;} .main-content{margin-left:70px;margin-right:0;} }
+    </style>
+</head>
+<body>
+
+<!-- Demo Banner -->
+<div class="demo-banner">
+    <i class="fas fa-eye"></i>
+    DEMO MODE — Coach / Admin View &nbsp;|&nbsp;
+    <a href="index.html">← Back to Demo Home</a>
+    &nbsp;|&nbsp;
+    <span style="opacity:.8">Read-only · No real data saved</span>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h2><i class="fas fa-dumbbell"></i> COACH PRO</h2>
+    <ul>
+        <li class="active"><i class="fas fa-users"></i> <span>Clients</span></li>
+        <li onclick="location.href='index.html'" class="logout"><i class="fas fa-sign-out-alt"></i> <span>Exit Demo</span></li>
+    </ul>
+</div>
+
+<!-- Main -->
+<div class="main-content">
+    <header>
+        <h1><i class="fas fa-tachometer-alt"></i> Client Management</h1>
+        <div class="header-actions">
+            <div class="stats">
+                <i class="fas fa-user-friends"></i>
+                <span>Clients: <strong id="clientCount">0</strong></span>
+            </div>
+            <span class="readonly-badge"><i class="fas fa-lock"></i> Demo — Read Only</span>
+        </div>
+    </header>
+
+    <section class="clients-list">
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Client</th>
+                        <th>Goal</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="clientTableBody"></tbody>
+            </table>
+        </div>
+    </section>
+</div>
+
+<!-- Client Info Popup -->
+<div class="info-popup" id="infoPopup">
+    <div class="info-popup-content">
+        <h3><i class="fas fa-user-circle"></i> Client Info</h3>
+        <div id="infoBody"></div>
+        <button class="close-info" onclick="closeInfo()">Close</button>
+    </div>
+</div>
+
+<!-- Plan Modal -->
+<div id="planModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2><i class="fas fa-eye"></i> View Plan: <span id="clientNameDisplay" style="color:#FFD700;"></span></h2>
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+        </div>
+        <div class="modal-body" id="planModalBody"></div>
+    </div>
+</div>
+
+<script>
+// ─── Sample Data ───────────────────────────────────────────────────────────
+const CLIENTS = [
+    {
+        id: 'client1',
+        name: 'Ahmed Hassan',
+        email: 'ahmed@example.com',
+        goal: 'Muscle Gain',
+        isActive: true,
+        createdAt: Date.now() - 1000 * 60 * 60 * 24 * 3,
+        age: 25, weight: '78 kg', height: '178 cm',
+        diet: {
+            meal1: '3 boiled eggs, 2 slices brown bread, 1 cup milk',
+            meal2: 'Handful of mixed nuts, 1 banana',
+            meal3: '200g grilled chicken, 1 cup rice, green salad',
+            meal4: '1 cup Greek yogurt, some fruits',
+            meal5: '150g grilled fish, steamed vegetables',
+            meal6: '1 scoop protein shake with water'
+        },
+        workout: {
+            days: 4,
+            schedule: [
+                { day:'Day 1 — Chest & Triceps', exercises:[
+                    {name:'Bench Press',sets:'4',reps:'10',rest:'90s',notes:'Control on the way down'},
+                    {name:'Incline Dumbbell Press',sets:'3',reps:'12',rest:'75s',notes:''},
+                    {name:'Tricep Pushdown',sets:'3',reps:'15',rest:'60s',notes:''},
+                ]},
+                { day:'Day 2 — Back & Biceps', exercises:[
+                    {name:'Pull-Ups',sets:'4',reps:'8',rest:'90s',notes:'Full range of motion'},
+                    {name:'Barbell Row',sets:'3',reps:'10',rest:'90s',notes:''},
+                    {name:'Dumbbell Curl',sets:'3',reps:'12',rest:'60s',notes:'Squeeze at the top'},
+                ]},
+                { day:'Day 3 — Legs', exercises:[
+                    {name:'Barbell Squat',sets:'4',reps:'10',rest:'120s',notes:'Knees over toes'},
+                    {name:'Leg Press',sets:'3',reps:'12',rest:'90s',notes:''},
+                    {name:'Calf Raises',sets:'4',reps:'20',rest:'45s',notes:''},
+                ]},
+                { day:'Day 4 — Shoulders', exercises:[
+                    {name:'Overhead Press',sets:'4',reps:'10',rest:'90s',notes:''},
+                    {name:'Lateral Raises',sets:'3',reps:'15',rest:'60s',notes:'Light weight, strict form'},
+                    {name:'Face Pulls',sets:'3',reps:'15',rest:'60s',notes:''},
+                ]},
+            ]
+        }
+    },
+    {
+        id: 'client2',
+        name: 'Sara Mohamed',
+        email: 'sara@example.com',
+        goal: 'Weight Loss',
+        isActive: true,
+        createdAt: Date.now() - 1000 * 60 * 60 * 24 * 10,
+        age: 28, weight: '65 kg', height: '165 cm',
+        diet: {
+            meal1: '2 boiled eggs, 1 slice whole wheat toast, green tea',
+            meal2: '1 apple, small handful almonds',
+            meal3: '150g grilled chicken breast, large salad, lemon dressing',
+            meal4: 'Low-fat yogurt with cucumber',
+            meal5: '150g baked salmon, steamed broccoli',
+            meal6: ''
+        },
+        workout: {
+            days: 3,
+            schedule: [
+                { day:'Day 1 — Full Body Cardio', exercises:[
+                    {name:'Treadmill Jog',sets:'1',reps:'20 min',rest:'—',notes:'Moderate pace'},
+                    {name:'Bodyweight Squats',sets:'3',reps:'20',rest:'45s',notes:''},
+                    {name:'Jump Rope',sets:'3',reps:'2 min',rest:'60s',notes:''},
+                ]},
+                { day:'Day 2 — Upper Body', exercises:[
+                    {name:'Push-Ups',sets:'4',reps:'15',rest:'60s',notes:''},
+                    {name:'Dumbbell Row',sets:'3',reps:'12',rest:'60s',notes:'Each side'},
+                    {name:'Shoulder Press',sets:'3',reps:'12',rest:'60s',notes:'Light dumbbells'},
+                ]},
+                { day:'Day 3 — Lower Body & Core', exercises:[
+                    {name:'Lunges',sets:'3',reps:'15 each',rest:'60s',notes:''},
+                    {name:'Hip Bridge',sets:'4',reps:'20',rest:'45s',notes:'Squeeze glutes'},
+                    {name:'Plank',sets:'3',reps:'45s',rest:'30s',notes:'Keep core tight'},
+                ]},
+            ]
+        }
+    },
+    {
+        id: 'client3',
+        name: 'Omar Ali',
+        email: 'omar@example.com',
+        goal: 'Endurance',
+        isActive: false,
+        createdAt: Date.now() - 1000 * 60 * 60 * 24 * 20,
+        age: 32, weight: '82 kg', height: '182 cm',
+        diet: {
+            meal1: 'Oatmeal with banana and honey, orange juice',
+            meal2: 'Energy bar, water',
+            meal3: '200g pasta, tomato sauce, mixed vegetables',
+            meal4: 'Fruits & nuts mix',
+            meal5: 'Grilled turkey, sweet potato, salad',
+            meal6: 'Casein protein shake before bed'
+        },
+        workout: {
+            days: 3,
+            schedule: [
+                { day:'Day 1 — Long Run', exercises:[
+                    {name:'Outdoor Run',sets:'1',reps:'45 min',rest:'—',notes:'Zone 2 heart rate'},
+                    {name:'Cool Down Walk',sets:'1',reps:'10 min',rest:'—',notes:''},
+                ]},
+                { day:'Day 2 — Cycling', exercises:[
+                    {name:'Stationary Bike',sets:'1',reps:'40 min',rest:'—',notes:'Interval: 2 min hard / 3 min easy'},
+                ]},
+                { day:'Day 3 — Swim / Row', exercises:[
+                    {name:'Swimming',sets:'8',reps:'50m',rest:'30s',notes:'Focus on breathing rhythm'},
+                ]},
+            ]
+        }
+    },
+    {
+        id: 'client4',
+        name: 'Nour Ibrahim',
+        email: 'nour@example.com',
+        goal: 'Toning & Flexibility',
+        isActive: true,
+        createdAt: Date.now() - 1000 * 60 * 60 * 2,
+        age: 24, weight: '58 kg', height: '162 cm',
+        diet: {
+            meal1: 'Smoothie bowl: banana, berries, almond milk, granola',
+            meal2: 'Rice cake with peanut butter',
+            meal3: 'Grilled shrimp, quinoa, roasted veggies',
+            meal4: 'Hummus and veggie sticks',
+            meal5: 'Lentil soup, whole grain bread',
+            meal6: ''
+        },
+        workout: {
+            days: 3,
+            schedule: [
+                { day:'Day 1 — Yoga & Core', exercises:[
+                    {name:'Sun Salutation Flow',sets:'3',reps:'5 rounds',rest:'—',notes:'Breathe through each pose'},
+                    {name:'Plank Variations',sets:'3',reps:'40s',rest:'20s',notes:'Side plank included'},
+                    {name:'Dead Bug',sets:'3',reps:'10 each',rest:'30s',notes:'Lower back stays flat'},
+                ]},
+                { day:'Day 2 — Pilates', exercises:[
+                    {name:'Roll Up',sets:'3',reps:'10',rest:'—',notes:'Slow and controlled'},
+                    {name:'Leg Circles',sets:'2',reps:'10 each',rest:'—',notes:''},
+                    {name:'Swimming (Pilates)',sets:'3',reps:'30s',rest:'20s',notes:''},
+                ]},
+                { day:'Day 3 — Stretch & Mobility', exercises:[
+                    {name:'Hip Flexor Stretch',sets:'2',reps:'60s each',rest:'—',notes:''},
+                    {name:'Foam Rolling',sets:'1',reps:'Full body',rest:'—',notes:'10 passes per area'},
+                    {name:'Child\'s Pose Flow',sets:'2',reps:'5 min',rest:'—',notes:''},
+                ]},
+            ]
+        }
+    },
+];
+
+// ─── Render Table ───────────────────────────────────────────────────────────
+function isNew(ts) { return Date.now() - ts < 1000 * 60 * 60 * 24 * 7; }
+
+function renderClients() {
+    const tbody = document.getElementById('clientTableBody');
+    document.getElementById('clientCount').textContent = CLIENTS.length;
+    tbody.innerHTML = CLIENTS.map(c => {
+        const status  = c.isActive ? 'Active' : 'Inactive';
+        const cls     = c.isActive ? 'active' : 'inactive';
+        const newBadge = isNew(c.createdAt) ? '<span class="new-badge">🆕 New</span>' : '';
+        return `
+        <tr>
+            <td>
+                <strong>${c.name}</strong> ${newBadge}<br>
+                <small style="color:#666"><i class="fas fa-envelope"></i> ${c.email}</small>
+            </td>
+            <td>${c.goal}</td>
+            <td><span class="status ${cls}">${status}</span></td>
+            <td>
+                <button class="btn-action" onclick="openPlan('${c.id}')">
+                    <i class="fas fa-eye"></i> View Plan
+                </button>
+                <button class="btn-info" onclick="openInfo('${c.id}')">
+                    <i class="fas fa-info-circle"></i> Client Info
+                </button>
+                <button class="btn-status deactivate" onclick="demoAlert()" style="margin-top:5px">
+                    <i class="fas fa-${c.isActive ? 'ban' : 'check'}"></i>
+                    ${c.isActive ? 'Deactivate' : 'Activate'} (Demo)
+                </button>
+            </td>
+        </tr>`;
+    }).join('');
+}
+
+// ─── Client Info Popup ──────────────────────────────────────────────────────
+function openInfo(id) {
+    const c = CLIENTS.find(x => x.id === id);
+    document.getElementById('infoBody').innerHTML = `
+        <div class="info-row"><i class="fas fa-user"></i><strong>Name:</strong>${c.name}</div>
+        <div class="info-row"><i class="fas fa-envelope"></i><strong>Email:</strong>${c.email}</div>
+        <div class="info-row"><i class="fas fa-bullseye"></i><strong>Goal:</strong>${c.goal}</div>
+        <div class="info-row"><i class="fas fa-birthday-cake"></i><strong>Age:</strong>${c.age} years</div>
+        <div class="info-row"><i class="fas fa-weight"></i><strong>Weight:</strong>${c.weight}</div>
+        <div class="info-row"><i class="fas fa-ruler-vertical"></i><strong>Height:</strong>${c.height}</div>
+        <div class="info-row"><i class="fas fa-circle" style="color:${c.isActive?'#2ecc71':'#e74c3c'}"></i><strong>Status:</strong>${c.isActive ? 'Active' : 'Inactive'}</div>
+    `;
+    document.getElementById('infoPopup').classList.add('open');
+}
+function closeInfo() { document.getElementById('infoPopup').classList.remove('open'); }
+
+// ─── Plan Modal ─────────────────────────────────────────────────────────────
+function openPlan(id) {
+    const c = CLIENTS.find(x => x.id === id);
+    document.getElementById('clientNameDisplay').textContent = c.name;
+
+    const mealIcons = ['fas fa-sun','fas fa-apple-alt','fas fa-hamburger','fas fa-cookie','fas fa-moon','fas fa-plus-circle'];
+    const mealLabels = ['Meal 1','Meal 2','Meal 3','Meal 4','Meal 5','Extra'];
+    const dietRows = Object.values(c.diet).map((v, i) => v ? `
+        <div class="meal-row">
+            <div class="meal-label"><i class="${mealIcons[i]}"></i> ${mealLabels[i]}</div>
+            <div class="meal-content">${v}</div>
+        </div>` : '').join('');
+
+    const workoutDays = c.workout.schedule.map(day => {
+        const rows = day.exercises.map(ex => `
+            <tr>
+                <td>${ex.name}</td>
+                <td>${ex.sets}</td>
+                <td>${ex.reps}</td>
+                <td>${ex.rest}</td>
+                <td>${ex.notes || '—'}</td>
+            </tr>`).join('');
+        return `
+        <div class="day-section">
+            <div class="day-header"><i class="fas fa-calendar-day"></i>${day.day}</div>
+            <table class="workout-table">
+                <thead><tr><th>Exercise</th><th>Sets</th><th>Reps</th><th>Rest</th><th>Notes</th></tr></thead>
+                <tbody>${rows}</tbody>
+            </table>
+        </div>`;
+    }).join('');
+
+    document.getElementById('planModalBody').innerHTML = `
+        <h3 style="color:#2c3e50;margin-bottom:20px"><i class="fas fa-utensils"></i> Diet Plan</h3>
+        <div class="meal-table">
+            <div class="meal-row meal-header">
+                <div class="meal-label">Meal</div>
+                <div class="meal-content">Details</div>
+            </div>
+            ${dietRows}
+        </div>
+        <h3 style="color:#2c3e50;margin:25px 0 15px"><i class="fas fa-dumbbell"></i> Workout Schedule — ${c.workout.days} Days/Week</h3>
+        ${workoutDays}
+        <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:10px;padding:14px 18px;margin-top:15px;font-size:13px;color:#856404;">
+            <i class="fas fa-lock"></i> <strong>Demo Mode:</strong> Editing is disabled. In the real system, the coach can modify plans here.
+        </div>
+    `;
+    document.getElementById('planModal').style.display = 'block';
+}
+
+function closeModal() { document.getElementById('planModal').style.display = 'none'; }
+
+function demoAlert() {
+    const n = document.createElement('div');
+    n.className = 'notification info';
+    n.style.cssText = 'position:fixed;bottom:30px;left:30px;padding:16px 22px;background:white;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.15);display:flex;align-items:center;gap:12px;z-index:9999;border-left:5px solid #3498db;font-size:14px;';
+    n.innerHTML = '<i class="fas fa-info-circle" style="color:#3498db;font-size:20px"></i> This action is disabled in demo mode.';
+    document.body.appendChild(n);
+    setTimeout(() => n.remove(), 2500);
+}
+
+// Click outside modal to close
+window.onclick = e => { if (e.target === document.getElementById('planModal')) closeModal(); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeInfo(); } });
+
+renderClients();
+</script>
+</body>
+</html>

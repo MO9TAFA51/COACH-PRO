@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Dashboard | COACH PRO Demo</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body {
+            background:linear-gradient(135deg,#2c3e50 0%,#34495e 100%);
+            min-height:100vh; padding:20px; direction:ltr;
+            padding-top:62px;
+        }
+        /* Demo banner */
+        .demo-banner {
+            position:fixed; top:0; left:0; right:0; z-index:9999;
+            background:linear-gradient(90deg,#27ae60,#2ecc71);
+            color:#fff; text-align:center; padding:10px 20px;
+            font-size:13px; font-weight:700; letter-spacing:.5px;
+            display:flex; align-items:center; justify-content:center; gap:14px;
+        }
+        .demo-banner a { color:#fff; text-decoration:underline; }
+
+        .client-container { max-width:1200px; margin:0 auto; }
+
+        .welcome-section {
+            background:white; color:#2c3e50; padding:40px;
+            border-radius:20px; margin-bottom:30px; text-align:center;
+            box-shadow:0 10px 40px rgba(0,0,0,.2); position:relative; overflow:hidden;
+        }
+        .welcome-section::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:5px;
+            background:linear-gradient(90deg,#2c3e50,#3498db,#2c3e50);
+            background-size:200% 100%; animation:gradient 3s ease infinite;
+        }
+        @keyframes gradient { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+        .welcome-section h1 { color:#2c3e50; margin-bottom:10px; font-size:34px; }
+        .welcome-section p { color:#7f8c8d; font-size:17px; }
+
+        /* Client switch bar */
+        .switch-bar {
+            background:white; border-radius:14px; padding:16px 24px; margin-bottom:24px;
+            box-shadow:0 5px 20px rgba(0,0,0,.08);
+            display:flex; align-items:center; gap:12px; flex-wrap:wrap;
+        }
+        .switch-bar span { color:#7f8c8d; font-size:14px; font-weight:600; }
+        .switch-btn {
+            padding:8px 18px; border-radius:20px; border:2px solid #e0e0e0;
+            background:white; cursor:pointer; font-size:13px; font-weight:600;
+            color:#2c3e50; transition:all .3s;
+        }
+        .switch-btn.active { background:linear-gradient(135deg,#2c3e50,#3498db); color:white; border-color:transparent; }
+        .switch-btn:hover:not(.active) { border-color:#3498db; color:#3498db; }
+
+        .client-card { background:white; border-radius:20px; padding:30px; box-shadow:0 10px 40px rgba(0,0,0,.15); margin-bottom:30px; }
+
+        .client-info { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:20px; margin-bottom:40px; }
+        .info-card {
+            background:linear-gradient(135deg,#2c3e50,#34495e);
+            padding:25px; border-radius:15px; text-align:center; color:white;
+            transition:all .3s; box-shadow:0 5px 15px rgba(44,62,80,.3);
+        }
+        .info-card:hover { transform:translateY(-5px); box-shadow:0 10px 30px rgba(44,62,80,.4); }
+        .info-card i { font-size:35px; margin-bottom:15px; opacity:.9; }
+        .info-card h3 { font-size:13px; margin-bottom:10px; opacity:.9; font-weight:500; }
+        .info-card p { font-size:19px; font-weight:bold; }
+
+        .plan-box {
+            background:#f8f9fa; border-radius:20px; padding:0;
+            margin-bottom:30px; overflow:hidden; box-shadow:0 5px 20px rgba(0,0,0,.08);
+        }
+        .plan-header {
+            background:linear-gradient(135deg,#2c3e50,#34495e); color:white;
+            padding:25px 30px; display:flex; align-items:center; gap:15px;
+            font-size:22px; font-weight:bold;
+        }
+
+        /* Diet */
+        .diet-content { background:white; padding:30px; }
+        .meal-item {
+            background:#f8f9fa; padding:20px; border-radius:12px;
+            margin-bottom:14px; border-left:4px solid #3498db; transition:all .3s;
+        }
+        .meal-item:hover { transform:translateX(5px); box-shadow:0 5px 15px rgba(0,0,0,.1); }
+        .meal-item h4 { color:#2c3e50; margin-bottom:8px; font-size:17px; display:flex; align-items:center; gap:10px; }
+        .meal-item p { color:#2c3e50; margin:0; line-height:1.6; }
+
+        /* Workout */
+        .workout-content { background:white; padding:30px; }
+        .workout-day { background:#f8f9fa; border-radius:15px; padding:25px; margin-bottom:22px; box-shadow:0 3px 10px rgba(0,0,0,.05); }
+        .workout-day-header {
+            background:linear-gradient(135deg,#2c3e50,#34495e); color:white;
+            padding:14px 20px; border-radius:10px; margin-bottom:18px;
+            display:flex; align-items:center; gap:10px; font-size:19px; font-weight:bold;
+        }
+        .exercise-item { background:white; padding:18px; border-radius:10px; margin-bottom:12px; border-left:4px solid #3498db; box-shadow:0 2px 8px rgba(0,0,0,.05); }
+        .exercise-name { color:#2c3e50; font-size:17px; font-weight:bold; margin-bottom:10px; display:flex; align-items:center; gap:8px; }
+        .exercise-details { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:12px; margin-top:12px; }
+        .exercise-detail { background:#f8f9fa; padding:10px; border-radius:8px; text-align:center; border:1px solid #e9ecef; }
+        .exercise-detail-label { font-size:11px; color:#7f8c8d; margin-bottom:4px; text-transform:uppercase; font-weight:600; }
+        .exercise-detail-value { font-size:17px; color:#2c3e50; font-weight:bold; }
+        .exercise-notes { margin-top:10px; padding-top:10px; border-top:1px solid #eee; font-size:13px; color:#7f8c8d; }
+
+        .logout-section { text-align:center; margin-top:30px; padding:25px; background:white; border-radius:20px; box-shadow:0 5px 20px rgba(0,0,0,.08); }
+        .logout-section button {
+            background:linear-gradient(135deg,#2c3e50,#34495e); color:white; border:none;
+            padding:14px 36px; border-radius:12px; font-size:17px; font-weight:bold;
+            cursor:pointer; transition:all .3s; box-shadow:0 5px 15px rgba(44,62,80,.3);
+        }
+        .logout-section button:hover { transform:translateY(-2px); box-shadow:0 8px 25px rgba(44,62,80,.4); }
+
+        @media(max-width:768px){
+            .welcome-section{padding:25px 20px;}
+            .client-card{padding:20px;}
+            .exercise-details{grid-template-columns:1fr 1fr;}
+        }
+    </style>
+</head>
+<body>
+
+<!-- Demo Banner -->
+<div class="demo-banner">
+    <i class="fas fa-eye"></i>
+    DEMO MODE — Client View &nbsp;|&nbsp;
+    <a href="index.html">← Back to Demo Home</a>
+</div>
+
+<div class="client-container">
+
+    <div class="welcome-section">
+        <h1 id="clientWelcome"><i class="fas fa-dumbbell"></i> Welcome!</h1>
+        <p id="clientEmail">Loading your data...</p>
+    </div>
+
+    <!-- Switch client -->
+    <div class="switch-bar">
+        <span><i class="fas fa-users"></i> View as:</span>
+        <button class="switch-btn active" onclick="loadClient(0, this)">Ahmed Hassan</button>
+        <button class="switch-btn" onclick="loadClient(1, this)">Sara Mohamed</button>
+        <button class="switch-btn" onclick="loadClient(2, this)">Omar Ali</button>
+        <button class="switch-btn" onclick="loadClient(3, this)">Nour Ibrahim</button>
+    </div>
+
+    <div class="client-card">
+        <div class="client-info">
+            <div class="info-card">
+                <i class="fas fa-bullseye"></i>
+                <h3>Fitness Goal</h3>
+                <p id="clientGoal">—</p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-weight"></i>
+                <h3>Weight</h3>
+                <p id="clientWeight">—</p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-user-shield"></i>
+                <h3>Your Coach</h3>
+                <p>COACH PRO</p>
+            </div>
+            <div class="info-card">
+                <i class="fas fa-calendar-week"></i>
+                <h3>Training Days</h3>
+                <p id="clientDays">—</p>
+            </div>
+        </div>
+
+        <div class="plan-section">
+            <!-- Diet -->
+            <div class="plan-box">
+                <div class="plan-header"><i class="fas fa-utensils"></i><span>Diet Plan</span></div>
+                <div id="dietContent" class="diet-content"></div>
+            </div>
+            <!-- Workout -->
+            <div class="plan-box">
+                <div class="plan-header"><i class="fas fa-dumbbell"></i><span>Workout Schedule</span></div>
+                <div id="workoutContent" class="workout-content"></div>
+            </div>
+        </div>
+
+        <div class="logout-section">
+            <button onclick="location.href='index.html'">
+                <i class="fas fa-arrow-left"></i> Back to Demo Home
+            </button>
+            <p style="margin-top:14px;color:#999;font-size:13px;">
+                <i class="fas fa-info-circle"></i> Demo mode — no real data
+            </p>
+        </div>
+    </div>
+</div>
+
+<script>
+const CLIENTS = [
+    {
+        name:'Ahmed Hassan', email:'ahmed@example.com',
+        goal:'Muscle Gain', weight:'78 kg',
+        diet:{
+            meal1:{icon:'fas fa-sun',label:'Meal 1',text:'3 boiled eggs, 2 slices brown bread, 1 cup milk'},
+            meal2:{icon:'fas fa-apple-alt',label:'Meal 2',text:'Handful of mixed nuts, 1 banana'},
+            meal3:{icon:'fas fa-hamburger',label:'Meal 3',text:'200g grilled chicken, 1 cup rice, green salad'},
+            meal4:{icon:'fas fa-cookie',label:'Meal 4',text:'1 cup Greek yogurt, some fruits'},
+            meal5:{icon:'fas fa-moon',label:'Meal 5',text:'150g grilled fish, steamed vegetables'},
+            meal6:{icon:'fas fa-plus-circle',label:'Extra',text:'1 scoop protein shake with water'},
+        },
+        workout:{
+            days:4,
+            schedule:[
+                {day:'Day 1 — Chest & Triceps', exercises:[
+                    {name:'Bench Press',sets:'4',reps:'10',rest:'90s',notes:'Control on the way down'},
+                    {name:'Incline Dumbbell Press',sets:'3',reps:'12',rest:'75s',notes:''},
+                    {name:'Tricep Pushdown',sets:'3',reps:'15',rest:'60s',notes:''},
+                ]},
+                {day:'Day 2 — Back & Biceps', exercises:[
+                    {name:'Pull-Ups',sets:'4',reps:'8',rest:'90s',notes:'Full range of motion'},
+                    {name:'Barbell Row',sets:'3',reps:'10',rest:'90s',notes:''},
+                    {name:'Dumbbell Curl',sets:'3',reps:'12',rest:'60s',notes:'Squeeze at the top'},
+                ]},
+                {day:'Day 3 — Legs', exercises:[
+                    {name:'Barbell Squat',sets:'4',reps:'10',rest:'120s',notes:'Knees over toes'},
+                    {name:'Leg Press',sets:'3',reps:'12',rest:'90s',notes:''},
+                    {name:'Calf Raises',sets:'4',reps:'20',rest:'45s',notes:''},
+                ]},
+                {day:'Day 4 — Shoulders', exercises:[
+                    {name:'Overhead Press',sets:'4',reps:'10',rest:'90s',notes:''},
+                    {name:'Lateral Raises',sets:'3',reps:'15',rest:'60s',notes:'Light weight, strict form'},
+                    {name:'Face Pulls',sets:'3',reps:'15',rest:'60s',notes:''},
+                ]},
+            ]
+        }
+    },
+    {
+        name:'Sara Mohamed', email:'sara@example.com',
+        goal:'Weight Loss', weight:'65 kg',
+        diet:{
+            meal1:{icon:'fas fa-sun',label:'Meal 1',text:'2 boiled eggs, 1 slice whole wheat toast, green tea'},
+            meal2:{icon:'fas fa-apple-alt',label:'Meal 2',text:'1 apple, small handful almonds'},
+            meal3:{icon:'fas fa-hamburger',label:'Meal 3',text:'150g grilled chicken breast, large salad, lemon dressing'},
+            meal4:{icon:'fas fa-cookie',label:'Meal 4',text:'Low-fat yogurt with cucumber'},
+            meal5:{icon:'fas fa-moon',label:'Meal 5',text:'150g baked salmon, steamed broccoli'},
+        },
+        workout:{
+            days:3,
+            schedule:[
+                {day:'Day 1 — Full Body Cardio', exercises:[
+                    {name:'Treadmill Jog',sets:'1',reps:'20 min',rest:'—',notes:'Moderate pace'},
+                    {name:'Bodyweight Squats',sets:'3',reps:'20',rest:'45s',notes:''},
+                    {name:'Jump Rope',sets:'3',reps:'2 min',rest:'60s',notes:''},
+                ]},
+                {day:'Day 2 — Upper Body', exercises:[
+                    {name:'Push-Ups',sets:'4',reps:'15',rest:'60s',notes:''},
+                    {name:'Dumbbell Row',sets:'3',reps:'12',rest:'60s',notes:'Each side'},
+                    {name:'Shoulder Press',sets:'3',reps:'12',rest:'60s',notes:'Light dumbbells'},
+                ]},
+                {day:'Day 3 — Lower Body & Core', exercises:[
+                    {name:'Lunges',sets:'3',reps:'15 each',rest:'60s',notes:''},
+                    {name:'Hip Bridge',sets:'4',reps:'20',rest:'45s',notes:'Squeeze glutes'},
+                    {name:'Plank',sets:'3',reps:'45s',rest:'30s',notes:'Keep core tight'},
+                ]},
+            ]
+        }
+    },
+    {
+        name:'Omar Ali', email:'omar@example.com',
+        goal:'Endurance', weight:'82 kg',
+        diet:{
+            meal1:{icon:'fas fa-sun',label:'Meal 1',text:'Oatmeal with banana and honey, orange juice'},
+            meal2:{icon:'fas fa-apple-alt',label:'Meal 2',text:'Energy bar, water'},
+            meal3:{icon:'fas fa-hamburger',label:'Meal 3',text:'200g pasta, tomato sauce, mixed vegetables'},
+            meal4:{icon:'fas fa-cookie',label:'Meal 4',text:'Fruits & nuts mix'},
+            meal5:{icon:'fas fa-moon',label:'Meal 5',text:'Grilled turkey, sweet potato, salad'},
+            meal6:{icon:'fas fa-plus-circle',label:'Extra',text:'Casein protein shake before bed'},
+        },
+        workout:{
+            days:3,
+            schedule:[
+                {day:'Day 1 — Long Run', exercises:[
+                    {name:'Outdoor Run',sets:'1',reps:'45 min',rest:'—',notes:'Zone 2 heart rate'},
+                    {name:'Cool Down Walk',sets:'1',reps:'10 min',rest:'—',notes:''},
+                ]},
+                {day:'Day 2 — Cycling', exercises:[
+                    {name:'Stationary Bike',sets:'1',reps:'40 min',rest:'—',notes:'Interval: 2 min hard / 3 min easy'},
+                ]},
+                {day:'Day 3 — Swim / Row', exercises:[
+                    {name:'Swimming',sets:'8',reps:'50m',rest:'30s',notes:'Focus on breathing rhythm'},
+                ]},
+            ]
+        }
+    },
+    {
+        name:'Nour Ibrahim', email:'nour@example.com',
+        goal:'Toning & Flexibility', weight:'58 kg',
+        diet:{
+            meal1:{icon:'fas fa-sun',label:'Meal 1',text:'Smoothie bowl: banana, berries, almond milk, granola'},
+            meal2:{icon:'fas fa-apple-alt',label:'Meal 2',text:'Rice cake with peanut butter'},
+            meal3:{icon:'fas fa-hamburger',label:'Meal 3',text:'Grilled shrimp, quinoa, roasted veggies'},
+            meal4:{icon:'fas fa-cookie',label:'Meal 4',text:'Hummus and veggie sticks'},
+            meal5:{icon:'fas fa-moon',label:'Meal 5',text:'Lentil soup, whole grain bread'},
+        },
+        workout:{
+            days:3,
+            schedule:[
+                {day:'Day 1 — Yoga & Core', exercises:[
+                    {name:'Sun Salutation Flow',sets:'3',reps:'5 rounds',rest:'—',notes:'Breathe through each pose'},
+                    {name:'Plank Variations',sets:'3',reps:'40s',rest:'20s',notes:'Side plank included'},
+                    {name:'Dead Bug',sets:'3',reps:'10 each',rest:'30s',notes:'Lower back stays flat'},
+                ]},
+                {day:'Day 2 — Pilates', exercises:[
+                    {name:'Roll Up',sets:'3',reps:'10',rest:'—',notes:'Slow and controlled'},
+                    {name:'Leg Circles',sets:'2',reps:'10 each',rest:'—',notes:''},
+                    {name:'Swimming (Pilates)',sets:'3',reps:'30s',rest:'20s',notes:''},
+                ]},
+                {day:'Day 3 — Stretch & Mobility', exercises:[
+                    {name:'Hip Flexor Stretch',sets:'2',reps:'60s each',rest:'—',notes:''},
+                    {name:'Foam Rolling',sets:'1',reps:'Full body',rest:'—',notes:'10 passes per area'},
+                    {name:"Child's Pose Flow",sets:'2',reps:'5 min',rest:'—',notes:''},
+                ]},
+            ]
+        }
+    },
+];
+
+function loadClient(idx, btn) {
+    // Update active button
+    document.querySelectorAll('.switch-btn').forEach(b => b.classList.remove('active'));
+    if(btn) btn.classList.add('active');
+
+    const c = CLIENTS[idx];
+    document.getElementById('clientWelcome').innerHTML = `<i class="fas fa-dumbbell"></i> Welcome, ${c.name.split(' ')[0]}!`;
+    document.getElementById('clientEmail').textContent = c.email;
+    document.getElementById('clientGoal').textContent = c.goal;
+    document.getElementById('clientWeight').textContent = c.weight;
+    document.getElementById('clientDays').textContent = c.workout.days + ' days/week';
+
+    // Diet
+    const dietEl = document.getElementById('dietContent');
+    dietEl.innerHTML = Object.values(c.diet).map(m => `
+        <div class="meal-item">
+            <h4><i class="${m.icon}"></i> ${m.label}</h4>
+            <p>${m.text}</p>
+        </div>`).join('');
+
+    // Workout
+    const wkEl = document.getElementById('workoutContent');
+    wkEl.innerHTML = c.workout.schedule.map(day => {
+        const exHtml = day.exercises.map(ex => `
+            <div class="exercise-item">
+                <div class="exercise-name"><i class="fas fa-dumbbell"></i>${ex.name}</div>
+                <div class="exercise-details">
+                    <div class="exercise-detail"><div class="exercise-detail-label">Sets</div><div class="exercise-detail-value">${ex.sets}</div></div>
+                    <div class="exercise-detail"><div class="exercise-detail-label">Reps</div><div class="exercise-detail-value">${ex.reps}</div></div>
+                    <div class="exercise-detail"><div class="exercise-detail-label">Rest</div><div class="exercise-detail-value">${ex.rest}</div></div>
+                </div>
+                ${ex.notes ? `<div class="exercise-notes"><i class="fas fa-sticky-note"></i> ${ex.notes}</div>` : ''}
+            </div>`).join('');
+        return `
+        <div class="workout-day">
+            <div class="workout-day-header"><i class="fas fa-calendar-day"></i>${day.day}</div>
+            ${exHtml}
+        </div>`;
+    }).join('');
+}
+
+loadClient(0, null);
+</script>
+</body>
+</html>
